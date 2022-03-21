@@ -30,13 +30,13 @@ router.get("/post/:postId", async (req, res) => {
 });
 
 // 게시글 수정
-router.put("/posts/:postId", async (req, res) => {
+router.put("/post/:postId", async (req, res) => {
     const { postId } = req.params;
     const { title, name, password, contents, dates } = req.body;
 
     const existsPost = await Post.find({ postId: Number(postId) });
     if (existsPost.length) {
-        await Post.updateOne({ postsId: Number(postId) }, { $set: { title, name, password, contents, dates } });
+        await Post.updateOne({ postId: Number(postId) }, { $set: { title, name, password, contents, dates } });
     }
 
     res.json({ success: true });
