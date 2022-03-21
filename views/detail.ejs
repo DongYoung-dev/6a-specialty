@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>렝가형아's 블로그 | 상세 페이지</title>
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- icon fontawesome CSS -->
+    <script src="https://kit.fontawesome.com/60f73b0952.js" crossorigin="anonymous"></script>
+
+    <!-- CSS 파일 경로 -->
+    <link rel="stylesheet" type="text/css" href="../static/posting.css">
+
+    <!-- ajax 사용 링크 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Google font 설정 링크 -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Dongle:wght@300;400&family=Gamja+Flower&family=IBM+Plex+Sans+KR:wght@100&family=Jua&display=swap"
+        rel="stylesheet">
+
+    <!-- JS *정확한 용도 검색 필요-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+
+</head>
+
+<script>
+    $(document).ready(function () {
+        detail_page()
+    })
+
+    //받아온 name 값이랑 같은 데이터들을 현재 문서의 데이터에 넣어주고 url값을 append 해줌
+    function detail_page() {
+        $.ajax({
+            type: "GET",
+            url: "/posting_show?name_give=" + '{{ name }}',  // -- 홈에서 클릭한 게시물의 이름을 받아오고 db에서 동일한 이름을 가진 데이터를 가져옴 --
+        data: {},
+            success: function (response) {
+                let name_data = response['name_data']
+                //아래 내용들은 함수 검색해서 공부 필요, id값이 name인 곳의 html에 name_data에 있는 name의 값을 입력하라!
+                document.getElementById("name").innerHTML = name_data['name']
+                document.getElementById("number").innerHTML = name_data['number']
+                document.getElementById("date").innerHTML = name_data['date']
+                document.getElementById("time").innerHTML = name_data['time']
+                document.getElementById("meeting").innerHTML = name_data['meeting']
+                document.getElementById("character").innerHTML = name_data['character']
+                let file = name_data['file']
+
+                let temp_html = `<img src="../static/${file}">`
+
+                $('#file').append(temp_html)
+            }
+        })
+    }
+
+    //삭제하기 버튼 클릭 시 posting_delete로 name 값을 넘겨주고 alert와 함께 인덱스 페이지로 이동
+    function delete_post() {
+        $.ajax({
+            type: 'GET',
+            url: '/posting_delete',
+            data: {
+                name_give: '{{ name }}'
+            },
+            success: function (response) {
+
+                alert(response['msg'])
+                window.location.href = '/'
+            }
+        });
+    }
+
+    //수정하기 버튼 클릭시 name 값을 가지고 posting_update로 이동
+    function update_post() {
+        window.location.href = '/posting_update.hml?name_give=' + '{{ name }}'
+    }
+
+
+</script>
+
+
+<body>
+    <!-- logo -->
+    <div class="logo">
+        <img src="../static/main_logo.png">
+        <a href="/">
+            <span class="icon-text">
+                <span class="icon">
+                    <i class="fas fa-home"></i>
+                </span>
+                <span>Home</span>
+            </span>
+        </a>
+    </div>
+
+    <!-- posting-box -->
+    <section class="main-box">
+        <div class="posting-box" id="posting-box">
+            <div class="wrap">
+                <div class="control" id="file"></div>
+                <div class="field">
+                    <label class="label">Name</label>
+                    <div class="control">
+                        <textarea class="input" id="name" readonly></textarea>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Number</label>
+                    <div class="control">
+                        <textarea class="input" id="number" readonly></textarea>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Date</label>
+                    <div class="control">
+                        <textarea class="input" id="date" readonly></textarea>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Time</label>
+                    <div class="control">
+                        <textarea class="input" id="time" readonly></textarea>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Area</label>
+                    <div class="control">
+                        <textarea class="input" id="meeting" readonly></textarea>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Character</label>
+                    <div class="control">
+                        <textarea class="input" id="character" readonly></textarea>
+                    </div>
+                </div>
+
+
+                <div class="btn-wrap">
+                    <button type="button" class="btn btn-secondary btn-lg mr-3"
+                        onclick='window.location.href = "/posting_update?name="+"{{ name }}"'>
+                        수정하기
+                    </button>
+                    <button type="button" class="btn btn-dark btn-lg" id="posting-btn" onclick="delete_post()">삭제하기
+                    </button>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+
+</body>
+
+</html>
