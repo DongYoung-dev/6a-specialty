@@ -31,6 +31,109 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
 
+    <style>
+        * {
+            font-family: 'Jua', sans-serif;
+        }
+
+        html,
+        body {
+            margin: 0;
+
+            padding: 0;
+
+            min-width: 100%;
+            width: 100%;
+            max-width: 100%;
+
+            min-height: 100%;
+            height: 100%;
+            max-height: 100%;
+
+            background-color: #F1DCBD;
+        }
+
+        .icon-text {
+            position: relative;
+            right: 700px;
+            bottom: 230px;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+        }
+
+        .wrap label {
+            font-weight: 300;
+            color: #5A3B1A;
+        }
+
+        .posting-box {
+            border: 1px solid #5A3B1A;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 500px;
+            margin: 60px auto 30px auto;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+        }
+
+        h1 {
+            margin-top: 16px;
+        }
+
+        .img-container {
+            width: 100%;
+        }
+
+        .img-wrap {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        #img-preview {
+            margin: 34px 0 50px 0;
+            width: 100%;
+            height: 330px;
+        }
+
+        .url {
+            margin-bottom: 16px;
+        }
+
+        /*사용자 임의 변경 불가*/
+        textarea {
+            resize: none;
+        }
+
+        .btn-wrap {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            width: 150px;
+            height: 40px;
+            font-size: 15px;
+            margin-left: 10px;
+        }
+
+        .footer {
+            background-color: #F1DCBD;
+            margin-top: 70px;
+        }
+    </style>
+
 
     <script>
         //등록하기 버튼 클릭 시 현재문서의 데이터를 posting으로 넘겨주고 alert과 함께 index.html로 이동
