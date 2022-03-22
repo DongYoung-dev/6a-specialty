@@ -20,6 +20,11 @@ app.use(requestMiddleware);
 
 app.use("/api", [postRouter]);
 
+// 작성페이지 불러오기
+app.get("/post", (req, res) => {
+    res.render("post.ejs")
+});
+
 // 메인페이지 불러오기
 app.get('/', (req, res) => {
     res.render("index.ejs")
@@ -32,9 +37,9 @@ app.get("/detail/:postId", async (req, res) => {
     res.render("detail.ejs", { post : post });
 });
 
-// 작성페이지 불러오기
-app.get("/post", (req, res) => {
-    res.render("post.ejs")
+// 수정페이지 불러오기
+app.get("/update/:articlesId", async (req, res) => {
+    res.render("update.ejs")
 });
 
 app.listen(port, () => {

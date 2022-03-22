@@ -134,30 +134,30 @@
     </style>
 
     <script>
-        //!--posting_detail 페이지에서  가져온 { { name } }이 작성한 데이터 불러오기-- ># 
+        const pathName = window.location.pathname;
+        const postId_arr = pathName.split("/")
+        const postId = postId_arr[2]
+
+
         $(document).ready(function () {
             detail_page()
         })
 
+
         function detail_page() {
             $.ajax({
                 type: "GET",
-                url: "/posting_show?name_give=" + '{{ name }}',
+                url: `/api/post/${postId}`,
                 data: {},
                 success: function (response) {
-                    let name_data = response['name_data']
+                    let rows = response['post']
 
-                    document.getElementById("name").innerHTML = name_data['name']
-                    document.getElementById("number").innerHTML = name_data['number']
-                    document.getElementById("date").innerHTML = name_data['date']
-                    document.getElementById("time").innerHTML = name_data['time']
-                    document.getElementById("meeting").innerHTML = name_data['meeting']
-                    document.getElementById("character").innerHTML = name_data['character']
-                    let file = name_data['file']
-
-                    let temp_html = `<img src="../static/${file}">`
-
-                    $('#file').append(temp_html)
+                    document.getElementById("postId").innerHTML = rows['postId']
+                    document.getElementById("title").innerHTML = rows['title']
+                    document.getElementById("name").innerHTML = rows['name']
+                    document.getElementById("password").innerHTML = rows['password']
+                    document.getElementById("contents").innerHTML = rows['contents']
+                    document.getElementById("dates").innerHTML = rows['dates']
                 }
             })
         }
@@ -172,10 +172,6 @@
             let meeting = $('#meeting').val()
             let character = $('#character').val()
 
-            let file = $('#file')[0].files[0]
-            let form_data = new FormData()
-
-            form_data.append("file_give", file)
             form_data.append("name_give", name)
             form_data.append("number_give", number)
             form_data.append("date_give", date)
@@ -229,65 +225,58 @@
     <section class="main-box">
         <div class="posting-box" id="posting-box">
             <div class="wrap">
-                <div class="file-choose">
-                    <div class="input-group mb-3" style="margin-top: 15px;">
-                        <input type="file" class="form-control" id="file">
-                        <label class="input-group-text" for="file"></label>
+                <div class="field">
+                    <label class="label">게시물 번호</label>
+                    <div class="control">
+                        <textarea class="input" id="postId" readonly></textarea>
                     </div>
-                    <div class="field">
-                        <label class="label">Name</label>
-                        <div class="control">
-                            <textarea class="input" id="name"></textarea>
-                        </div>
+                </div>
+                <div class="field">
+                    <label class="label">제목</label>
+                    <div class="control">
+                        <textarea class="input" id="title"></textarea>
                     </div>
-                    <div class="field">
-                        <label class="label">Number</label>
-                        <div class="control">
-                            <textarea class="input" id="number"
-                                oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                                maxlength="11"></textarea>
-                        </div>
+                </div>
+                <div class="field">
+                    <label class="label">작성자</label>
+                    <div class="control">
+                        <textarea class="input" id="name"></textarea>
                     </div>
-                    <div class="field">
-                        <label class="label">Date</label>
-                        <div class="control">
-                            <input class="input" type="date" id="date">
-                        </div>
+                </div>
+                <div class="field">
+                    <label class="label">비밀번호</label>
+                    <div class="control">
+                        <textarea class="input" id="password"></textarea>
                     </div>
-                    <div class="field">
-                        <label class="label">Time</label>
-                        <div class="control">
-                            <input class="input" type="time" id="time">
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Area</label>
-                        <div class="control">
-                            <textarea class="input" id="meeting"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Character</label>
-                        <div class="control">
-                            <textarea class="input" id="character"></textarea>
-                        </div>
-                    </div>
-
-                    <!-- '수정완료' 버튼 누르면 update()함수 실행,  '취소하기' 버튼 누르면 detail 페이지로 이동-->
-                    <div class="btn-wrap">
-                        <button type="button" class="btn btn-secondary btn-lg mr-3" onclick=update()>
-                            수정완료
-                        </button>
-                        <button type="button" class="btn btn-dark btn-lg" id="posting-btn"
-                            onclick='window.location.href = "/posting_detail?name=" + "{{ name }}"'>
-                            취소하기
-                        </button>
+                </div>
+                <div class="field">
+                    <label class="label">내용</label>
+                    <div class="control">
+                        <textarea class="input" id="contents"></textarea>
                     </div>
                 </div>
 
+                <div class="field">
+                    <label class="label">날짜</label>
+                    <div class="control">
+                        <textarea class="input" id="dates"></textarea>
+                    </div>
+                </div>
 
+                <!-- '수정완료' 버튼 누르면 update()함수 실행,  '취소하기' 버튼 누르면 detail 페이지로 이동-->
+                <div class="btn-wrap">
+                    <button type="button" class="btn btn-secondary btn-lg mr-3" onclick=update()>
+                        수정완료
+                    </button>
+                    <button type="button" class="btn btn-dark btn-lg" id="posting-btn"
+                        onclick='window.location.href = "/posting_detail?name=" + "{{ name }}"'>
+                        취소하기
+                    </button>
+                </div>
             </div>
+
+
+        </div>
     </section>
 
     <!--footer-->

@@ -31,6 +31,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
 
+
     <script>
         //등록하기 버튼 클릭 시 현재문서의 데이터를 posting으로 넘겨주고 alert과 함께 index.html로 이동
         function posting() {
@@ -50,7 +51,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/api/post",
+                url: "/post",
                 data: form_data,
                 cache: false,
                 contentType: false,
