@@ -1,5 +1,7 @@
 const express = require('express');
+const ejs = require('ejs');
 const connect = require("./schemas");
+const Post = require("./schemas/post");
 const app = express();
 const port = 3000;
 
@@ -18,8 +20,21 @@ app.use(requestMiddleware);
 
 app.use("/api", [postRouter]);
 
+// 메인페이지 불러오기
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.render("index.ejs")
+});
+
+// 상세페이지 불러오기
+app.get("/detail/:postId", async (req, res) => {
+	const { postId } = req.params;
+	const post = await Post.findOne({ postId });
+    res.render("detail.ejs", { post : post });
+});
+
+// 작성페이지 불러오기
+app.get("/post", (req, res) => {
+    res.render("post.ejs")
 });
 
 app.listen(port, () => {

@@ -30,61 +30,156 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
 
-</head>
+    <style>
+        * {
+            font-family: 'Jua', sans-serif;
+        }
 
-<script>
-    $(document).ready(function () {
-        detail_page()
-    })
+        html,
+        body {
+            margin: 0;
 
-    //받아온 name 값이랑 같은 데이터들을 현재 문서의 데이터에 넣어주고 url값을 append 해줌
-    function detail_page() {
-        $.ajax({
-            type: "GET",
-            url: "/posting_show?name_give=" + '{{ name }}',  // -- 홈에서 클릭한 게시물의 이름을 받아오고 db에서 동일한 이름을 가진 데이터를 가져옴 --
-        data: {},
-            success: function (response) {
-                let name_data = response['name_data']
-                //아래 내용들은 함수 검색해서 공부 필요, id값이 name인 곳의 html에 name_data에 있는 name의 값을 입력하라!
-                document.getElementById("name").innerHTML = name_data['name']
-                document.getElementById("number").innerHTML = name_data['number']
-                document.getElementById("date").innerHTML = name_data['date']
-                document.getElementById("time").innerHTML = name_data['time']
-                document.getElementById("meeting").innerHTML = name_data['meeting']
-                document.getElementById("character").innerHTML = name_data['character']
-                let file = name_data['file']
+            padding: 0;
 
-                let temp_html = `<img src="../static/${file}">`
+            min-width: 100%;
+            width: 100%;
+            max-width: 100%;
 
-                $('#file').append(temp_html)
-            }
+            min-height: 100%;
+            height: 100%;
+            max-height: 100%;
+
+            background-color: #F1DCBD;
+        }
+
+        .icon-text {
+            position: relative;
+            right: 700px;
+            bottom: 230px;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+        }
+
+        .wrap label {
+            font-weight: 300;
+            color: #5A3B1A;
+        }
+
+        .posting-box {
+            border: 1px solid #5A3B1A;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 500px;
+            margin: 60px auto 30px auto;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+        }
+
+        h1 {
+            margin-top: 16px;
+        }
+
+        .img-container {
+            width: 100%;
+        }
+
+        .img-wrap {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        #img-preview {
+            margin: 34px 0 50px 0;
+            width: 100%;
+            height: 330px;
+        }
+
+        .url {
+            margin-bottom: 16px;
+        }
+
+        /*사용자 임의 변경 불가*/
+        textarea {
+            resize: none;
+        }
+
+        .btn-wrap {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            width: 150px;
+            height: 40px;
+            font-size: 15px;
+            margin-left: 10px;
+        }
+
+        .footer {
+            background-color: #F1DCBD;
+            margin-top: 70px;
+        }
+    </style>
+
+    <script>
+        const pathName = window.location.pathname;
+        const postId_arr = pathName.split("/")
+        const postId = postId_arr[2]
+
+
+        $(document).ready(function () {
+            detail_page()
         })
-    }
 
-    //삭제하기 버튼 클릭 시 posting_delete로 name 값을 넘겨주고 alert와 함께 인덱스 페이지로 이동
-    function delete_post() {
-        $.ajax({
-            type: 'GET',
-            url: '/posting_delete',
-            data: {
-                name_give: '{{ name }}'
-            },
-            success: function (response) {
+        //받아온 name 값이랑 같은 데이터들을 현재 문서의 데이터에 넣어주고 url값을 append 해줌
+        function detail_page() {
+            $.ajax({
+                type: "GET",
+                url: `/api/post/${postId}`,  // -- 홈에서 클릭한 게시물의 이름을 받아오고 db에서 동일한 이름을 가진 데이터를 가져옴 --
+                data: {},
+                success: function (response) {
+                    let rows = response['post']
 
-                alert(response['msg'])
-                window.location.href = '/'
-            }
-        });
-    }
+                    document.getElementById("postId").innerHTML = rows['postId']
+                    document.getElementById("title").innerHTML = rows['title']
+                    document.getElementById("name").innerHTML = rows['name']
+                    document.getElementById("password").innerHTML = rows['password']
+                    document.getElementById("contents").innerHTML = rows['contents']
+                    document.getElementById("dates").innerHTML = rows['dates']
+                }
+            })
+        }
 
-    //수정하기 버튼 클릭시 name 값을 가지고 posting_update로 이동
-    function update_post() {
-        window.location.href = '/posting_update.hml?name_give=' + '{{ name }}'
-    }
+        //삭제하기 버튼 클릭 시 posting_delete로 name 값을 넘겨주고 alert와 함께 인덱스 페이지로 이동
+        function delete_post() {
+            $.ajax({
+                type: 'GET',
+                url: '/posting_delete',
+                data: {
+                    name_give: '{{ name }}'
+                },
+                success: function (response) {
 
+                    alert(response['msg'])
+                    window.location.href = '/'
+                }
+            });
+        }
 
-</script>
-
+    </script>
+</head>
 
 <body>
     <!-- logo -->
@@ -104,42 +199,41 @@
     <section class="main-box">
         <div class="posting-box" id="posting-box">
             <div class="wrap">
-                <div class="control" id="file"></div>
                 <div class="field">
-                    <label class="label">Name</label>
+                    <label class="label">게시물 번호</label>
+                    <div class="control">
+                        <textarea class="input" id="postId" readonly></textarea>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">제목</label>
+                    <div class="control">
+                        <textarea class="input" id="title" readonly></textarea>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">작성자</label>
                     <div class="control">
                         <textarea class="input" id="name" readonly></textarea>
                     </div>
                 </div>
                 <div class="field">
-                    <label class="label">Number</label>
+                    <label class="label">비밀번호</label>
                     <div class="control">
-                        <textarea class="input" id="number" readonly></textarea>
+                        <textarea class="input" id="password" readonly></textarea>
                     </div>
                 </div>
                 <div class="field">
-                    <label class="label">Date</label>
+                    <label class="label">내용</label>
                     <div class="control">
-                        <textarea class="input" id="date" readonly></textarea>
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">Time</label>
-                    <div class="control">
-                        <textarea class="input" id="time" readonly></textarea>
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">Area</label>
-                    <div class="control">
-                        <textarea class="input" id="meeting" readonly></textarea>
+                        <textarea class="input" id="contents" readonly></textarea>
                     </div>
                 </div>
 
                 <div class="field">
-                    <label class="label">Character</label>
+                    <label class="label">날짜</label>
                     <div class="control">
-                        <textarea class="input" id="character" readonly></textarea>
+                        <textarea class="input" id="dates" readonly></textarea>
                     </div>
                 </div>
 
@@ -158,6 +252,16 @@
         </div>
     </section>
 
+    <!--footer-->
+    <footer class="footer" style="padding: 50px; text-align: center; text-decoration: none">
+        <div class="content has-text-centered">
+            <p>
+                <strong>DOG DOG</strong> by <strong>Hanghae 6a_team4.</strong> The source code is licensed
+                6a_team_4</a>.
+                Please refer to github for details <a href="https://github.com/U-Jinyeol/6a-team4">[github link]</a>.
+            </p>
+        </div>
+    </footer>
 </body>
 
 </html>

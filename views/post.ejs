@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<!-- 설명 읽어도 뭔말인지 모르겠음.. 다른데는 안써도 되던데 뭘까 -->
+
+<head>
+    <meta charset="UTF-8">
+    <title>렝가형아's 블로그 | 작성 페이지</title>
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- icon fontawesome CSS -->
+    <script src="https://kit.fontawesome.com/60f73b0952.js" crossorigin="anonymous"></script>
+
+    <!-- CSS 파일 경로 -->
+    <link rel="stylesheet" type="text/css" href="../static/posting.css">
+
+    <!-- ajax 사용 링크 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Google font 설정 링크 -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Dongle:wght@300;400&family=Gamja+Flower&family=IBM+Plex+Sans+KR:wght@100&family=Jua&display=swap"
+        rel="stylesheet">
+
+    <!-- JS *정확한 용도 검색 필요-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+
+    <script>
+        //등록하기 버튼 클릭 시 현재문서의 데이터를 posting으로 넘겨주고 alert과 함께 index.html로 이동
+        function posting() {
+            let postId = $('#postId').val()
+            let title = $('#title').val()
+            let name = $('#name').val()
+            let password = $('#password').val()
+            let contents = $('#contents').val()
+            let dates = $('#dates').val()
+
+            form_data.append("postId_give", postId)
+            form_data.append("title_give", title)
+            form_data.append("name_give", name)
+            form_data.append("password_give", password)
+            form_data.append("contents_give", contents)
+            form_data.append("dates_give", dates)
+
+            $.ajax({
+                type: "POST",
+                url: "/api/post",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.href = "/"
+                }
+            });
+        }
+
+    </script>
+
+
+</head>
+
+
+<body>
+    <!-- logo -->
+    <div class="logo">
+        <img src="../static/main_logo.png">
+        <a href="/">
+            <span class="icon-text">
+                <span class="icon">
+                    <i class="fas fa-home"></i>
+                </span>
+                <span>Home</span>
+            </span>
+        </a>
+    </div>
+
+    <!-- posting-box -->
+    <section class="main-box">
+        <div class="posting-box" id="posting-box">
+            <div class="wrap">
+                <div class="file-choose">
+                    <div class="input-group mb-3" style="margin-top: 15px;">
+                        <input type="file" class="form-control" id="file"> <!-- 파일 형태 업로드는 input type이 file -->
+                        <label class="input-group-text" for="file"></label>
+                    </div>
+                </div>
+                <label class="label">Name</label>
+                <div class="control">
+                    <input class="input" type="text" id="name" placeholder="반려동물 이름">
+                </div>
+                <div class="field">
+                    <label class="label">Number</label>
+                    <div class="control">
+                        <input class="input" type="text" maxlength="11" id="number"
+                            placeholder="'-'을 제외한 휴대폰 번호를 입력해주세요"
+                            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        <!-- 숫자만 입력 가능하고 최대 11자리까지 -->
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Date</label>
+                    <div class="control">
+                        <input class="input" type="date" id="date" placeholder="만날 날짜">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Time</label>
+                    <div class="control">
+                        <input class="input" type="time" id="time" placeholder="만날 시간">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Area</label>
+                    <div class="control">
+                        <input class="input" type="text" id="meeting" placeholder="만나는 지역">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Character</label>
+                    <div class="control">
+                        <input class="input" type="text" id="character" placeholder="반려동물 특징">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- btn-group -->
+        <div class="btn-wrap">
+            <button onclick="posting()" type="button" class="btn btn-dark btn-lg" id="posting-btn">등록하기</button>
+            <button onclick="window.location.href='/'" type="button" class="btn btn-secondary btn-lg mr-3">취소하기</button>
+        </div>
+        </div>
+    </section>
+
+</body>
+
+</html>

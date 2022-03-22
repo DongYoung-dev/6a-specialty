@@ -19,19 +19,19 @@ router.post("/post", async (req, res) => {
 // 전체게시글 조회
 router.get("/post", async (req, res, next) => {
 	const post = await Post.find();
-    res.json({ post });
+    res.send({ post });
 });
 
-// 상세게시글 조회
+// 상세페이지 조회
 router.get("/post/:postId", async (req, res) => {
-	const { postId } = req.params;
-	const post = await Post.findOne({ postId });
-    res.json({ post });
+    const { postId } = req.params;
+    const post = await Post.findOne({ postId });
+    res.send({ post });
 });
 
 // 게시글 수정
 router.put("/post/:postId", async (req, res) => {
-    const { postId } = req.params;
+    const { postId } = req.params;  
     const { title, name, password, contents, dates } = req.body;
 
     const existsPost = await Post.find({ postId: Number(postId) });
