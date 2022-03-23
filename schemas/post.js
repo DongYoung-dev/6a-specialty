@@ -22,10 +22,14 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    dates: {
-        type: Date,
+    date: {
+        type: String,
         required: true,
-    }
+    },
+    time: {
+        type: Number,
+        required: true,
+    },
 });
 
 module.exports = mongoose.model("Post", postSchema);

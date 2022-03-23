@@ -4,21 +4,28 @@ const router = express.Router();
 
 // 게시글 등록
 router.post("/post", async (req, res) => {
-    const { postId, title, name, password, contents, dates } = req.body;
+    const { title, name, password, contents, date, time } = req.body;
 
-    const post = await Post.find({ postId });
-    if (post.length) {
-        return res.status(400).json({ success: false, errorMessage: "이미 있는 데이터입니다." });
+    const postAmount = await Post.find();
+
+
+    if (postAmount.length) {
+        const postSorted = postAmount.sort((a,b) => b.postId - a.postId)
+        const MaxPostNum = postSorted[0]['postId']
+        const postId = MaxPostNum + 1
+        const createdPost = await Post.create({ postId, title, name, password, contents, date, time });
+    } else {
+        const postId = 1
+        const createdPost = await Post.create({ postId, title, name, password, contents, date, time });
     }
 
-    const createdPost = await Post.create({ postId, title, name, password, contents, dates });
-
-    res.json({ post: createdPost });
+    res.json({ result: "게시글 등록 완료!" });
 });
 
 // 전체게시글 조회
 router.get("/post", async (req, res, next) => {
-	const post = await Post.find();
+	const postArr = await Post.find();
+    let post = postArr.sort((a,b) => b.time - a.time)
     res.send({ post });
 });
 
@@ -32,26 +39,31 @@ router.get("/post/:postId", async (req, res) => {
 // 게시글 수정
 router.put("/post/:postId", async (req, res) => {
     const { postId } = req.params;  
-    const { title, name, password, contents, dates } = req.body;
+    const { title, name, password, contents, date, time } = req.body;
 
-    const existsPost = await Post.find({ postId: Number(postId) });
-    if (existsPost.length) {
-        await Post.updateOne({ postId: Number(postId) }, { $set: { title, name, password, contents, dates } });
+    const pwCheck = await Post.find({ postId: postId })
+
+    if (pwCheck[0]["password"] === password ) {
+        await Post.updateOne({ postId: Number(postId) }, { $set: { title, name, password, contents, date, time } });
+        res.json({ result: "success" })
+    } else {
+        res.json({ result: "fail" })
     }
-
-    res.json({ success: true });
 })
 
 // 게시글 삭제
 router.delete("/post/:postId", async (req, res) => {
-    const { postId } = req.params;
+    const { postId } = req.params
+    const { password } = req.body
+    
+    const pwCheck = await Post.find({ postId: postId })
 
-    const existsPost = await Post.find({ postId });
-    if (existsPost.length > 0) {
-        await Post.deleteOne({ postId });
+    if (pwCheck[0]["password"] === password) {
+        await Post.deleteOne({ postId: postId })
+        res.json({ result: "success" })
+    } else {
+        res.json({ result: "fail" })
     }
-
-    res.json({ success: true });
-});
+})
 
 module.exports = router;

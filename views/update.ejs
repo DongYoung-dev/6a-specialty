@@ -15,9 +15,6 @@
     <!-- icon fontawesome CSS -->
     <script src="https://kit.fontawesome.com/60f73b0952.js" crossorigin="anonymous"></script>
 
-    <!-- CSS 파일 경로 -->
-    <link rel="stylesheet" type="text/css" href="../static/posting.css">
-
     <!-- ajax 사용 링크 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
@@ -152,53 +149,57 @@
                 success: function (response) {
                     let rows = response['post']
 
-                    document.getElementById("postId").innerHTML = rows['postId']
                     document.getElementById("title").innerHTML = rows['title']
                     document.getElementById("name").innerHTML = rows['name']
-                    document.getElementById("password").innerHTML = rows['password']
                     document.getElementById("contents").innerHTML = rows['contents']
-                    document.getElementById("dates").innerHTML = rows['dates']
+                    document.getElementById("date").innerHTML = rows['date']
                 }
             })
         }
 
         // !-- '수정완료' 버튼을 누르면 실행 되는 함수 / 각 아이디 값의 맞는 정보 가져오기-- >
         // !--수정하기를 한번에 하는 방법을 찾다가 실패 후 본 데이터를 삭제하고 새로 업로드 되는 형태로 완성-- >
-        function update() {
+        function update_post() {
+            let title = $('#title').val()
             let name = $('#name').val()
-            let number = $('#number').val()
-            let date = $('#date').val()
-            let time = $('#time').val()
-            let meeting = $('#meeting').val()
-            let character = $('#character').val()
+            let password = $('#password').val()
+            let contents = $('#contents').val()
+            let now = new Date()
+            let date = now.toDateString()
+            let time = now.getTime()
 
-            form_data.append("name_give", name)
-            form_data.append("number_give", number)
-            form_data.append("date_give", date)
-            form_data.append("time_give", time)
-            form_data.append("meeting_give", meeting)
-            form_data.append("character_give", character)
+            let data = { title, name, password, contents, date, time }
 
-            //{ { name } }의 데이터 삭제하기# }
             $.ajax({
-                type: 'GET',
-                url: '/posting_delete',
-                data: {
-                    name_give: '{{ name }}'
+                type: "PUT",
+                url: `/api/post/${postId}`,
+                data: data,
+                dataType: 'json',
+                success: function (response) {
+                    if (response["result"] === 'success') {
+                        alert("게시물 수정 완료!")
+                        window.location.href = "/"
+                    } else {
+                        alert("비밀번호를 확인해주세요")
+                    }
                 }
             });
+        }
 
-            // #데이터 불러온 후 메인페이지로 이동# }
+        function delete_post() {
+            let password = $('#password').val()
+
             $.ajax({
-                type: "POST",
-                url: "/updating",
-                data: form_data,
-                cache: false,
-                contentType: false,
-                processData: false,
+                type: 'DELETE',
+                url: `/api/post/${postId}`,
+                data: { password },
                 success: function (response) {
-                    alert(response["msg"])
-                    window.location.href = "/"
+                    if (response["result"] === 'success') {
+                        alert("게시물 삭제 완료!")
+                        window.location.href = "/"
+                    } else {
+                        alert("비밀번호를 확인해주세요")
+                    }
                 }
             });
         }
@@ -208,7 +209,7 @@
 </head>
 
 <body>
-    <!-- logo -->
+    <!-- logo
     <div class="logo">
         <img src="../static/main_logo.png">
         <a href="/">
@@ -219,18 +220,12 @@
                 <span>Home</span>
             </span>
         </a>
-    </div>
+    </div> -->
 
     <!-- posting-box -->
     <section class="main-box">
         <div class="posting-box" id="posting-box">
             <div class="wrap">
-                <div class="field">
-                    <label class="label">게시물 번호</label>
-                    <div class="control">
-                        <textarea class="input" id="postId" readonly></textarea>
-                    </div>
-                </div>
                 <div class="field">
                     <label class="label">제목</label>
                     <div class="control">
@@ -255,21 +250,23 @@
                         <textarea class="input" id="contents"></textarea>
                     </div>
                 </div>
-
                 <div class="field">
                     <label class="label">날짜</label>
                     <div class="control">
-                        <textarea class="input" id="dates"></textarea>
+                        <textarea class="input" id="date" readonly></textarea>
                     </div>
                 </div>
 
                 <!-- '수정완료' 버튼 누르면 update()함수 실행,  '취소하기' 버튼 누르면 detail 페이지로 이동-->
                 <div class="btn-wrap">
-                    <button type="button" class="btn btn-secondary btn-lg mr-3" onclick=update()>
+                    <button type="button" class="btn btn-dark btn-lg" onclick=update_post()>
                         수정완료
                     </button>
-                    <button type="button" class="btn btn-dark btn-lg" id="posting-btn"
-                    onclick="location.replace('/detail/'+postId)">
+                    <button type="button" class="btn btn-secondary btn-lg" onclick=delete_post()>
+                        삭제하기
+                    </button>
+                    <button type="button" class="btn btn-light" id="posting-btn"
+                        onclick="location.replace('/detail/'+postId)">
                         취소하기
                     </button>
                 </div>

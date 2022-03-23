@@ -16,9 +16,6 @@
     <!-- icon fontawesome CSS -->
     <script src="https://kit.fontawesome.com/60f73b0952.js" crossorigin="anonymous"></script>
 
-    <!-- CSS 파일 경로 -->
-    <link rel="stylesheet" type="text/css" href="../static/posting.css">
-
     <!-- ajax 사용 링크 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
@@ -137,29 +134,23 @@
     <script>
         //등록하기 버튼 클릭 시 현재문서의 데이터를 posting으로 넘겨주고 alert과 함께 index.html로 이동
         function posting() {
-            let postId = $('#postId').val()
             let title = $('#title').val()
             let name = $('#name').val()
             let password = $('#password').val()
             let contents = $('#contents').val()
-            let dates = $('#dates').val()
+            let now = new Date()
+            let date = now.toDateString()
+            let time = now.getTime()
 
-            form_data.append("postId_give", postId)
-            form_data.append("title_give", title)
-            form_data.append("name_give", name)
-            form_data.append("password_give", password)
-            form_data.append("contents_give", contents)
-            form_data.append("dates_give", dates)
+            let data = { title, name, password, contents, date, time }
 
             $.ajax({
                 type: "POST",
-                url: "/post",
-                data: form_data,
-                cache: false,
-                contentType: false,
-                processData: false,
+                url: "/api/post",
+                data: data,
+                dataType: 'json',
                 success: function (response) {
-                    alert(response["msg"])
+                    alert(response["result"])
                     window.location.href = "/"
                 }
             });
@@ -172,9 +163,9 @@
 
 
 <body>
-    <!-- logo -->
+    <!-- logo
     <div class="logo">
-        <img src="../static/main_logo.png">
+        <img src="../static/banner.jpg">
         <a href="/">
             <span class="icon-text">
                 <span class="icon">
@@ -183,47 +174,32 @@
                 <span>Home</span>
             </span>
         </a>
-    </div>
+    </div> -->
 
     <!-- posting-box -->
     <section class="main-box">
         <div class="posting-box" id="posting-box">
             <div class="wrap">
-                <label class="label">Name</label>
+                <label class="label">title</label>
                 <div class="control">
-                    <input class="input" type="text" id="name" placeholder="반려동물 이름">
+                    <input class="input" type="text" id="title" placeholder="제목">
                 </div>
                 <div class="field">
-                    <label class="label">Number</label>
+                    <label class="label">name</label>
                     <div class="control">
-                        <input class="input" type="text" maxlength="11" id="number"
-                            placeholder="'-'을 제외한 휴대폰 번호를 입력해주세요"
-                            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
-                        <!-- 숫자만 입력 가능하고 최대 11자리까지 -->
+                        <input class="input" type="text" id="name" placeholder="작성자">
                     </div>
                 </div>
                 <div class="field">
-                    <label class="label">Date</label>
+                    <label class="label">password</label>
                     <div class="control">
-                        <input class="input" type="date" id="date" placeholder="만날 날짜">
+                        <input class="input" type="text" id="password" placeholder="비밀번호">
                     </div>
                 </div>
                 <div class="field">
-                    <label class="label">Time</label>
+                    <label class="label">contents</label>
                     <div class="control">
-                        <input class="input" type="time" id="time" placeholder="만날 시간">
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">Area</label>
-                    <div class="control">
-                        <input class="input" type="text" id="meeting" placeholder="만나는 지역">
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">Character</label>
-                    <div class="control">
-                        <input class="input" type="text" id="character" placeholder="반려동물 특징">
+                        <input class="input" type="text" id="contents" placeholder="내용">
                     </div>
                 </div>
             </div>
@@ -237,6 +213,18 @@
         </div>
         </div>
     </section>
+
+    <!--footer-->
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <strong>RengaBro's Blog</strong> by <strong>DongYoung</strong> The source code is licensed
+                DongYoung</a>.
+                Please refer to github for details <a href="https://github.com/DongYoung-dev/6a-specialty">[github
+                    link]</a>.
+            </p>
+        </div>
+    </footer>
 
 </body>
 
