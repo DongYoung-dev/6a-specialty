@@ -31,14 +31,12 @@ app.get('/', (req, res) => {
 });
 
 // 상세페이지 불러오기
-app.get("/detail/:postId", async (req, res) => {
-	const { postId } = req.params;
-	const post = await Post.findOne({ postId });
-    res.render("detail.ejs", { post : post });
+app.get("/detail/:postId", (req, res) => {
+    res.render("detail.ejs");
 });
 
 // 수정페이지 불러오기
-app.get("/update/:articlesId", async (req, res) => {
+app.get("/update/:articlesId", (req, res) => {
     res.render("update.ejs")
 });
 
