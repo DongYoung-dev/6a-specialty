@@ -157,38 +157,15 @@
             })
         }
 
-        //삭제하기 버튼 클릭 시 posting_delete로 name 값을 넘겨주고 alert와 함께 인덱스 페이지로 이동
-        function delete_post() {
-            $.ajax({
-                type: 'GET',
-                url: '/posting_delete',
-                data: {
-                    name_give: '{{ name }}'
-                },
-                success: function (response) {
-
-                    alert(response['msg'])
-                    window.location.href = '/'
-                }
-            });
-        }
-
     </script>
 </head>
 
 <body>
-    <!-- logo
+
+    <!-- logo -->
     <div class="logo">
-        <img src="../static/main_logo.png">
-        <a href="/">
-            <span class="icon-text">
-                <span class="icon">
-                    <i class="fas fa-home"></i>
-                </span>
-                <span>Home</span>
-            </span>
-        </a>
-    </div> -->
+        <img src="../banner.png">
+    </div>
 
     <!-- posting-box -->
     <section class="main-box">
@@ -235,12 +212,13 @@
     </section>
 
     <!--footer-->
-    <footer class="footer" style="padding: 50px; text-align: center; text-decoration: none">
+    <footer class="footer">
         <div class="content has-text-centered">
             <p>
-                <strong>DOG DOG</strong> by <strong>Hanghae 6a_team4.</strong> The source code is licensed
-                6a_team_4</a>.
-                Please refer to github for details <a href="https://github.com/U-Jinyeol/6a-team4">[github link]</a>.
+                <strong>RengaBro's Blog</strong> by <strong>DongYoung</strong> The source code is licensed
+                DongYoung</a>.
+                Please refer to github for details <a href="https://github.com/DongYoung-dev/6a-specialty">[github
+                    link]</a>.
             </p>
         </div>
     </footer>
