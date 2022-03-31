@@ -135,14 +135,12 @@
         //등록하기 버튼 클릭 시 현재문서의 데이터를 posting으로 넘겨주고 alert과 함께 index.html로 이동
         function posting() {
             let title = $('#title').val()
-            let name = $('#name').val()
-            let password = $('#password').val()
             let contents = $('#contents').val()
             let now = new Date()
             let date = now.toDateString()
             let time = now.getTime()
 
-            let data = { title, name, password, contents, date, time }
+            let data = { title, contents, date, time }
 
             $.ajax({
                 type: "POST",
@@ -175,18 +173,6 @@
                 <label class="label">title</label>
                 <div class="control">
                     <input class="input" type="text" id="title" placeholder="제목">
-                </div>
-                <div class="field">
-                    <label class="label">name</label>
-                    <div class="control">
-                        <input class="input" type="text" id="name" placeholder="작성자">
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">password</label>
-                    <div class="control">
-                        <input class="input" type="password" id="password" placeholder="비밀번호">
-                    </div>
                 </div>
                 <div class="field">
                     <label class="label">contents</label>

@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Webpage Title -->
+    <title>렝가형아's 블로그 | 로그인 페이지</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+    <!-- bootstrap icon CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Google font 설정 링크 -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Dongle:wght@300;400&family=Gamja+Flower&family=IBM+Plex+Sans+KR:wght@100&family=Jua&display=swap"
+        rel="stylesheet">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <!-- icon -->
+    <script src="https://kit.fontawesome.com/ef66986082.js" crossorigin="anonymous"></script>
+
+    <style>
+        * {
+            font-family: 'Jua', sans-serif;
+        }
+
+        .title {
+            display: block;
+            background-color: white;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            margin: 10px;
+        }
+
+        body {
+            background-color: #F1DCBD;
+            height: 100%;
+            min-height: 100vh;
+        }
+
+        .is-sparta {
+            color: whitesmoke !important;
+        }
+
+        .button.is-sparta {
+            background-color: #FBB13D;
+            color: dimgray !important;
+            font-weight: 400;
+            font-family: 'Jua', sans-serif;
+        }
+
+        .button.is-sparta.is-outlined {
+            background-color: white;
+            border-color: #FBB13D;
+            color: #FBB13D !important;
+            font-weight: 400;
+            font-family: 'Jua', sans-serif;
+        }
+
+        .help {
+            color: gray;
+        }
+
+        .input {
+            border: 0.5px solid darkslategray;
+            border-color: #FBB13D !important;
+        }
+
+        .bottomImg img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+
+    <script>
+        // <!--로그인함수 -->
+        function sign_in() {
+            let userId = $("#input-username").val()
+            let password = $("#input-password").val()
+
+            if (userId == "") {
+                $("#help-id-login").text("아이디를 입력해주세요.")
+                $("#input-username").focus()
+                return;
+            } else {
+                $("#help-id-login").text("")
+            }
+
+            if (password == "") {
+                $("#help-password-login").text("비밀번호를 입력해주세요.")
+                $("#input-password").focus()
+                return;
+            } else {
+                $("#help-password-login").text("")
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/api/login",
+                data: {
+                    userId,
+                    password,
+                },
+                success: function (response) {
+                    if (response['message'] == '로그인 완료!') {
+                        $.cookie('mytoken', response['token'], { path: '/' });
+                        window.location.replace("/")
+                    }
+                },
+                error: function(error) {
+                    alert(error.responseJSON.errorMessage);
+                }
+            });
+        }
+
+        // <!-- 회원가입 input 값 확인-->
+        function sign_up() {
+            let userId = $("#input-username").val()
+            let password = $("#input-password").val()
+            let confirmPassword = $("#input-password2").val()
+            let nickname = $("#input-nickname").val()
+
+            // <!-- 회원가입 정보 서버 저장 -->
+
+            $.ajax({
+                type: "POST",
+                url: "/api/join",
+                data: {
+                    userId,
+                    password,
+                    confirmPassword,
+                    nickname,
+                },
+                dataType: "json",
+                success: function (response) {
+                    alert(response["message"]);
+                    window.location.replace("/login")
+                },
+                error: function (request, status, error) {
+                    alert(request.responseJSON["message"]);
+                },
+            });
+
+        }
+
+        // <!-- 회원가입 클릭시 새창이 아닌 현재창에서 로그인 화면 -> 회원가입 창으로 보이지 않던게 보이는 효과 -->
+        function toggle_sign_up() {
+            $("#sign-up-box").toggleClass("is-hidden")
+            $("#div-sign-in-or-up").toggleClass("is-hidden")
+            $("#help-id").toggleClass("is-hidden")
+            $("#help-password").toggleClass("is-hidden")
+            $("#help-password2").toggleClass("is-hidden")
+        }
+
+        // <!-- 중복 및 오류 확인 -->
+        
+    </script>
+
+</head>
+
+<body>
+    <!-- logo -->
+    <div class="logo">
+        <img src="banner.png">
+    </div>
+
+    <!-- Sign in & up box -->
+    <div class="container">
+        <div class="box" style="max-width: 480px;margin:auto">
+            <article class="media">
+                <div class="media-content">
+                    <div class="content">
+                        <div class="field has-addons">
+                            <div class="control has-icons-left" style="width:100%">
+                                <input id="input-username" class="input" type="text" placeholder="아이디">
+                                <span class="icon is-small is-left"><i class="fa fa-user"></i></span>
+                            </div>
+
+
+                        </div>
+                        <p id="help-id" class="help is-hidden">아이디는 3글자 이상 영문과 숫자만입력 가능합니다.</p>
+                        <p id="help-id-login" class="help is-danger"></p>
+
+                        <div class="field">
+                            <div class="control has-icons-left">
+                                <input id="input-password" class="input" type="password" placeholder="비밀번호">
+                                <span class="icon is-small is-left"><i class="fa fa-lock"></i></span>
+                            </div>
+                            <p id="help-password" class="help is-hidden">4글자 이상의 비밀번호를 설정해주세요.</p>
+                        </div>
+
+
+                    </div>
+                    <div id="div-sign-in-or-up" class="has-text-centered">
+                        <nav class="level is-mobile">
+                            <button class="level-item button is-sparta" onclick="sign_in()">
+                                로그인
+                            </button>
+
+                        </nav>
+                        <hr>
+                        <h4 class="mb-3">아직 회원이 아니라면</h4>
+                        <nav class="level is-mobile">
+
+                            <button class="level-item button is-sparta is-outlined" onclick="toggle_sign_up()">
+                                회원가입하기
+                            </button>
+                        </nav>
+                    </div>
+
+                    <div id="sign-up-box" class="is-hidden">
+                        <div class="mb-5">
+                            <div class="field">
+                                <div class="control has-icons-left" style="width:100%">
+                                    <input id="input-password2" class="input" type="password" placeholder="비밀번호 재입력">
+                                    <span class="icon is-small is-left"><i class="fa fa-lock"></i></span>
+                                </div>
+                                <p id="help-password2" class="help is-hidden">비밀번호를 다시 한 번 입력해주세요.</p>
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <div class="field">
+                                <div class="control has-icons-left" style="width:100%">
+                                    <input id="input-nickname" class="input" type="nickname" placeholder="닉네임">
+                                    <span class="icon is-small is-left"><i class="fa fa-user"></i></span>
+                                </div>
+                                <p id="help-nickname" class="help"></p>
+                            </div>
+                        </div>
+
+                        <nav class="level is-mobile">
+                            <button class="level-item button is-sparta" onclick="sign_up()">
+                                회원가입
+                            </button>
+                            <button class="level-item button is-sparta is-outlined" onclick="toggle_sign_up()">
+                                취소
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <!-- 하단 이미지 -->
+    <div class="bottomImg">
+        <img src="https://cdn.notefolio.net/img/51/c6/51c6dd8a4850d159da163b3366f5881edb6e9328fef230985e5c877aa852c93d_v1.jpg"
+            width="200px">
+    </div>
+
+    <!-- footer -->
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <strong>RengaBro's Blog</strong> by <strong>DongYoung</strong> The source code is licensed
+                DongYoung</a>.
+                Please refer to github for details <a href="https://github.com/DongYoung-dev/6a-specialty">[github
+                    link]</a>.
+            </p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
