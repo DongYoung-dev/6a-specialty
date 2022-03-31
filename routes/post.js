@@ -3,15 +3,15 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/auth-middleware");
 const controller = require("../controller/post");
 
-router.post("/post", authMiddleware, controller.applyPost);
+router.post("/post", controller.applyPost);
 
 router.get("/post", controller.showPost);
 
 router.get("/post/:postId", controller.detailPost);
 
-router.patch("/post/:postId", authMiddleware, controller.updatePost);
+router.patch("/post/:postId", controller.updatePost);
 
-router.delete("/post/:postId", authMiddleware, controller.deletePost);
+router.delete("/post/:postId", controller.deletePost);
 
 // router.patch("/post/:postId/likes", authMiddleware, controller.likesPost);
 

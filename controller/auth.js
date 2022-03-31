@@ -48,7 +48,7 @@ async function login(req, res) {
 
         if (password === user.password) {
 
-            const token = jwt.sign({ userId: userId }, `${process.env.SECRET_KEY}`);
+            const token = jwt.sign({ userId: userId }, "MYSECRETKEY");
             res.send({
                 token,
                 message: "로그인 완료!",
@@ -61,18 +61,9 @@ async function login(req, res) {
     }
 }
 
-async function checkDup(req, res) {
-    const { userId } = req.body;
-
-    const user = await User.find({ userId });
-    if (user.length) {
-        res.status(401).send({
-            message: "중복된 아이디입니다",
-        });
-        return;
-    } else {
-        
-    }
+async function userMe(req, res) {
+    const { auth } = res.locals;
+    res.send({ auth });
 }
 
-module.exports = { join, login, checkDup };
+module.exports = { join, login, userMe };

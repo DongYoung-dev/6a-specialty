@@ -2,6 +2,7 @@ const express = require('express');
 const ejs = require('ejs');
 const connect = require("./schemas");
 const Post = require("./schemas/post");
+const cookieParser = require('cookie-parser');
 const app = express();
 const port = 3000;
 
@@ -21,6 +22,7 @@ app.use(express.static('static'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(requestMiddleware);
+app.use(cookieParser());
 
 app.use("/api", [postRouter, authRouter, commentRouter]);
 

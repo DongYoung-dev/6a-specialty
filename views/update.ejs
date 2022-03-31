@@ -26,6 +26,7 @@
     <!-- JS *정확한 용도 검색 필요-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
     <style>
         * {
@@ -161,17 +162,15 @@
         // !--수정하기를 한번에 하는 방법을 찾다가 실패 후 본 데이터를 삭제하고 새로 업로드 되는 형태로 완성-- >
         function update_post() {
             let title = $('#title').val()
-            let name = $('#name').val()
-            let password = $('#password').val()
             let contents = $('#contents').val()
             let now = new Date()
             let date = now.toDateString()
             let time = now.getTime()
 
-            let data = { title, name, password, contents, date, time }
+            let data = { title, contents, date, time }
 
             $.ajax({
-                type: "PUT",
+                type: "PATCH",
                 url: `/api/post/${postId}`,
                 data: data,
                 dataType: 'json',
@@ -187,12 +186,10 @@
         }
 
         function delete_post() {
-            let password = $('#password').val()
 
             $.ajax({
                 type: 'DELETE',
                 url: `/api/post/${postId}`,
-                data: { password },
                 success: function (response) {
                     if (response["result"] === 'success') {
                         alert("게시물 삭제 완료!")
@@ -228,15 +225,10 @@
                 <div class="field">
                     <label class="label">name</label>
                     <div class="control">
-                        <textarea class="input" id="name"></textarea>
+                        <textarea class="input" id="name" readonly></textarea>
                     </div>
                 </div>
-                <div class="field">
-                    <label class="label">password</label>
-                    <div class="control">
-                        <input class="input" type="password" id="password" placeholder="비밀번호">
-                    </div>
-                </div>
+                
                 <div class="field">
                     <label class="label">contents</label>
                     <div class="control">

@@ -1,28 +1,26 @@
-const jwt = require("jsonwebtoken");
-const User = require("../schemas/users");
+const jwt = require('jsonwebtoken');
+const User = require('../schemas/users');
 
-// 사용자 검사 미들웨어
 module.exports = async (req, res, next) => {
-
-    const { authorization } = req.headers;
-    const [tokenType, tokenValue] = authorization.split(" ");
-
-    if (tokenType !== "Bearer") {
-        res.status(401).send({
-            errorMessage: "로그인 후 사용하세요",
-        });
-        return;
-    }
     try {
-        const secretKey = process.env.SECRET_KEY;
-        const { userId } = jwt.verify(tokenValue, `${secretKey}`);
-        const user = await User.findOne({ email: userId });
-        res.locals.user = user;
+        if (!req.cookies.mytoken) {
+            res.locals.auth = 'falseLogin';
+        } else {
+            try {
+                const {userId} = jwt.verify(req.cookies.mytoken, "MYSECRETKEY");
+                const existUser = await User.findOne({userId});
+                if (!existUser) res.locals.auth = 'errorLogin';
+                else {
+                    res.locals.user = existUser;
+                    res.locals.auth = 'trueLogin';
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        }
         next();
-    } catch (err) {
-        res.status(401).send({
-            errorMessage: "로그인 후 사용하세요!",
-        });
+    } catch (e) {
+        console.log(e);
         return;
     }
 };

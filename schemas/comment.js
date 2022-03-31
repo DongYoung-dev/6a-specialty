@@ -12,7 +12,12 @@ const commentSchema = new mongoose.Schema({
     nickname:{
         type:String,
         required:true,
+    },
+    commentId:{
+        type:Number,
+        required:true,
     }
+    
 })
 
 module.exports = mongoose.model("Comment", commentSchema)

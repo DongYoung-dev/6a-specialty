@@ -7,6 +7,6 @@ router.post("/join", controller.join);
 
 router.post("/login", controller.login);
 
-router.post("/check_dup", controller.checkDup);
+router.get("/users/me", authMiddleware, controller.userMe)
 
 module.exports = router;

@@ -26,6 +26,7 @@
     <!-- JS *정확한 용도 검색 필요-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
     <style>
         * {
@@ -135,10 +136,23 @@
         const postId_arr = pathName.split("/")
         const postId = postId_arr[2]
 
-
         $(document).ready(function () {
-            detail_page()
-        })
+            detail_page(),
+            listing();
+            $.ajax({
+                type: "GET",
+                url: "/api/users/me",
+                success: function (response) {
+                    if (response['auth'] === 'falseLogin') {
+                        $(`.isUser`).hide();
+                    } else if (response['auth'] === 'errorLogin') {
+                        $(`.isUser`).hide();
+                    }
+                },
+                error: function (error) {
+                },
+            });
+        });
 
         //받아온 name 값이랑 같은 데이터들을 현재 문서의 데이터에 넣어주고 url값을 append 해줌
         function detail_page() {
@@ -153,6 +167,81 @@
                     document.getElementById("name").innerHTML = rows['name']
                     document.getElementById("contents").innerHTML = rows['contents']
                     document.getElementById("date").innerHTML = rows['date']
+                }
+            })
+        }
+
+        function apply_comment() {
+            let comment = $("#comment").val()
+            $.ajax({
+                type: "POST",
+                url: `/api/post/${postId}/comment`,  // -- 홈에서 클릭한 게시물의 이름을 받아오고 db에서 동일한 이름을 가진 데이터를 가져옴 --
+                data: {
+                    comment,
+                },
+                success: function (response) {
+                    location.reload()
+                }
+            })
+        }
+
+        function delete_post(num) {
+            $.ajax({
+                type: "DELETE",
+                url: `/api/post/${postId}/comment`,  // -- 홈에서 클릭한 게시물의 이름을 받아오고 db에서 동일한 이름을 가진 데이터를 가져옴 --
+                data: {
+                    commentId: num,
+                },
+                success: function (response) {
+                    location.reload()
+                }
+            })
+        }
+
+        function update_post(num) {
+            let comment = $(`#updateComment${num}`).val()
+            $.ajax({
+                type: "PATCH",
+                url: `/api/post/${postId}/comment`,  // -- 홈에서 클릭한 게시물의 이름을 받아오고 db에서 동일한 이름을 가진 데이터를 가져옴 --
+                data: {
+                    commentId: num,
+                    comment
+                },
+                success: function (response) {
+                    location.reload()
+                }
+            })
+        }
+
+        function listing() {
+            $.ajax({
+                type: 'GET',
+                url: `/api/post/${postId}/comment`,
+                data: {},
+                success: function (response) {
+                    let rows = response['comment']
+                    for (let i = 0; i < rows.length; i++) {
+                        let comment = rows[i]['comment']
+                        let nickname = rows[i]['nickname']
+                        let commentId = rows[i]['commentId']
+
+                        let temp_html = `
+                            <div class="posting-box" id="posting-box">
+                                <div class="wrap">
+                                    <div class="field">
+                                        <div class="control">
+                                            <textarea class="input" id="updateComment${commentId}">${comment}</textarea>
+                                        </div>
+                                        <div class ="isUser">
+                                        <button onclick="delete_post(${commentId})">삭제해라</button>
+                                        <button onclick="update_post(${commentId})">수정해라</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`
+
+                        $('#cards-box').append(temp_html)
+                    }
                 }
             })
         }
@@ -198,7 +287,7 @@
 
 
                 <div class="btn-wrap">
-                    <button type="button" class="btn btn-dark btn-lg" onclick="location.replace('/update/'+postId)">
+                    <button type="button" class="isUser btn btn-dark btn-lg" onclick="location.replace('/update/'+postId)">
                         수정하기
                     </button>
                     <button onclick="window.location.href='/'" type="button" class="btn btn-secondary btn-lg mr-3">
@@ -208,6 +297,32 @@
             </div>
 
 
+        </div>
+    </section>
+
+    <section class="main-box">
+        <div class="posting-box" id="posting-box">
+            <div class="wrap">
+                <div class="field">
+                    <label class="label">comment</label>
+                    <div class="control">
+                        <textarea class="input" id="comment"></textarea>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-dark btn-lg" onclick="apply_comment()">
+                    댓글쓰기
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section class="main-box">
+        <div class="posting-box" id="posting-box">
+            <div class="wrap">
+                <div class="field">
+                    <div id="cards-box"></div>
+                </div>
+            </div>
         </div>
     </section>
 

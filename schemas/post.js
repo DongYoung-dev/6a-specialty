@@ -10,10 +10,6 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    nickname: {
-        type: String,
-        required: true,
-    },
     contents: {
         type: String,
         required: true,

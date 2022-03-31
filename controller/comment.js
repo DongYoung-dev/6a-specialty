@@ -5,17 +5,29 @@ async function showComment(req, res) {
 
     const comment = await Comment.find({ postId });
     res.send({
-        comment,
+        comment
     });
 }
 
 async function applyComment(req, res) {
     try {
-        const { nickname } = res.locals.user;
+        console.log(res.locals)
+        const { user } = res.locals;
         const { comment } = req.body;
         const { postId } = req.params;
 
-        await Comment.create({ postId, comment, nickname });
+        const commentAmount = await Comment.find();
+
+        if (commentAmount.length) {
+            const commentSorted = commentAmount.sort((a,b) => b.commentId - a.commentId)
+            const MaxCommentNum = commentSorted[0]['commentId']
+            const commentId = MaxCommentNum + 1
+            await Comment.create({ postId, comment, nickname : user.nickname, commentId });
+        } else {
+            const commentId = 1
+            await Comment.create({ postId, comment, nickname : user.nickname, commentId });
+        }
+
         res.send({
             message: "댓글 등록 완료!",
         });
@@ -27,24 +39,19 @@ async function applyComment(req, res) {
 }
 
 async function updateComment(req, res) {
-    const { localNickname } = res.locals.user;
-    const { comment } = req.body;
-    const { commentNickname } = await Comment.findOne({ postId });
+    const { comment, commentId } = req.body;
 
-    if (localNickname !== commentNickname) {
-        return res.send("자신이 작성한 댓글만 수정할 수 있습니다.");
-    }
-
-    await Comment.updateOne({ localNickname }, { $set: { comment } })
+    await Comment.updateOne({ commentId }, { $set: { comment } })
     res.send({
         message: "댓글 수정 완료!",
     });
 }
 
 async function deleteComment(req, res) {
+    console.log(req.body)
     try {
-        const { nickname } = res.locals.user;
-        await Comment.deleteOne({ nickname });
+        const { commentId } = req.body;
+        await Comment.deleteOne({ commentId });
         res.send({
             Message: "댓글 삭제 완료!",
         });
@@ -54,3 +61,5 @@ async function deleteComment(req, res) {
         });
     }
 }
+
+module.exports = { showComment, applyComment, updateComment, deleteComment };
