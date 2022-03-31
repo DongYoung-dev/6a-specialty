@@ -131,6 +131,12 @@
             listing();
         });
 
+        function logout() {
+            $.removeCookie("mytoken", { path: "/" });
+            alert("로그아웃!")
+            window.location.reload();
+        }
+
         function listing() {
             $('#cards-box').empty()
             $.ajax({
@@ -193,6 +199,7 @@
 
     <div class="mybtn">
         <button onclick="window.location.href='/login'">로그인</button>
+        <button class="isUser" onclick="logout()">로그아웃</button>
     </div>
 
     <div class="mybtn">
