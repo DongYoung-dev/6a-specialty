@@ -150,8 +150,8 @@
                 success: function (response) {
                     let rows = response['post']
 
+                    document.getElementById("userId").innerHTML = rows['userId']
                     document.getElementById("title").innerHTML = rows['title']
-                    document.getElementById("name").innerHTML = rows['name']
                     document.getElementById("contents").innerHTML = rows['contents']
                     document.getElementById("date").innerHTML = rows['date']
                 }
@@ -225,7 +225,7 @@
                 <div class="field">
                     <label class="label">name</label>
                     <div class="control">
-                        <textarea class="input" id="name" readonly></textarea>
+                        <textarea class="input" id="userId" readonly></textarea>
                     </div>
                 </div>
                 

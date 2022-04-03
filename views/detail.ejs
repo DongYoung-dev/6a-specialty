@@ -144,9 +144,9 @@
                 url: "/api/users/me",
                 success: function (response) {
                     if (response['auth'] === 'falseLogin') {
-                        $(`.isUser`).hide();
+                        $(`.isNotUser`).hide();
                     } else if (response['auth'] === 'errorLogin') {
-                        $(`.isUser`).hide();
+                        $(`.isNotUser`).hide();
                     }
                 },
                 error: function (error) {
@@ -163,8 +163,8 @@
                 success: function (response) {
                     let rows = response['post']
 
+                    document.getElementById("userId").innerHTML = rows['userId']
                     document.getElementById("title").innerHTML = rows['title']
-                    document.getElementById("name").innerHTML = rows['name']
                     document.getElementById("contents").innerHTML = rows['contents']
                     document.getElementById("date").innerHTML = rows['date']
                 }
@@ -235,7 +235,7 @@
                                         <div class="control">
                                             <textarea class="input" id="updateComment${commentId}">${comment}</textarea>
                                         </div>
-                                        <div class ="isUser">
+                                        <div class ="isNotUser">
                                         <button onclick="delete_post(${commentId})">삭제해라</button>
                                         <button onclick="update_post(${commentId})">수정해라</button>
                                         </div>
@@ -272,7 +272,7 @@
                 <div class="field">
                     <label class="label">name</label>
                     <div class="control">
-                        <textarea class="input" id="name" readonly></textarea>
+                        <textarea class="input" id="userId" readonly></textarea>
                     </div>
                 </div>
                 <div class="field">
@@ -290,7 +290,7 @@
 
 
                 <div class="btn-wrap">
-                    <button type="button" class="isUser btn btn-dark btn-lg" onclick="location.replace('/update/'+postId)">
+                    <button type="button" class="isNotUser btn btn-dark btn-lg" onclick="location.replace('/update/'+postId)">
                         수정하기
                     </button>
                     <button onclick="window.location.href='/'" type="button" class="btn btn-secondary btn-lg mr-3">

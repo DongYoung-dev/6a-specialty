@@ -4,19 +4,18 @@ const Comment = require("../schemas/comment");
 // 게시글 등록 applyPost
 async function applyPost(req, res) {
     const { title, contents, date, time } = req.body;
+    const { userId } = res.locals.user;
     
-
     const postAmount = await Post.find();
-
 
     if (postAmount.length) {
         const postSorted = postAmount.sort((a,b) => b.postId - a.postId)
         const MaxPostNum = postSorted[0]['postId']
         const postId = MaxPostNum + 1
-        const createdPost = await Post.create({ postId, title, contents, date, time });
+        const createdPost = await Post.create({ postId, title, contents, date, time, userId });
     } else {
         const postId = 1
-        const createdPost = await Post.create({ postId, title,  contents, date, time });
+        const createdPost = await Post.create({ postId, title,  contents, date, time, userId });
     }
 
     res.json({ result: "게시글 등록 완료!" });

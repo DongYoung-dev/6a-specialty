@@ -3,7 +3,7 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/auth-middleware");
 const controller = require("../controller/post");
 
-router.post("/post", controller.applyPost);
+router.post("/post", authMiddleware, controller.applyPost);
 
 router.get("/post", controller.showPost);
 
