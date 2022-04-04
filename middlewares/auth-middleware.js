@@ -12,10 +12,12 @@ module.exports = async (req, res, next) => {
                 if (!existUser) res.locals.auth = 'errorLogin';
                 else {
                     res.locals.user = existUser;
-                    res.locals.auth = 'trueLogin';
+                    res.locals.auth = 'trueLogin'; 
                 }
             } catch (e) {
                 console.log(e);
+            
+                
             }
         }
         next();
