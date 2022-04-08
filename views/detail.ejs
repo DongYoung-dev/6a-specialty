@@ -139,12 +139,14 @@
         $(document).ready(function () {
             detail_page(),
             listing();
+            
             $.ajax({
                 type: "GET",
                 url: "/api/users/me",
                 success: function (response) {
                     if (response['auth'] === 'falseLogin') {
                         $(`.isNotUser`).hide();
+
                     } else if (response['auth'] === 'errorLogin') {
                         $(`.isNotUser`).hide();
                     }
@@ -235,7 +237,7 @@
                                         <div class="control">
                                             <textarea class="input" id="updateComment${commentId}">${comment}</textarea>
                                         </div>
-                                        <div class ="isNotUser">
+                                        <div class="isNotUser">
                                         <button onclick="delete_post(${commentId})">삭제해라</button>
                                         <button onclick="update_post(${commentId})">수정해라</button>
                                         </div>

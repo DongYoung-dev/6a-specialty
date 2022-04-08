@@ -7,7 +7,7 @@ router.get("/post/:postId/comment", controller.showComment);
 
 router.post("/post/:postId/comment", authMiddleware, controller.applyComment);
 
-router.patch("/post/:postId/comment/", authMiddleware, controller.updateComment);
+router.patch("/post/:postId/comment", authMiddleware, controller.updateComment);
 
 router.delete("/post/:postId/comment", authMiddleware, controller.deleteComment);
 
